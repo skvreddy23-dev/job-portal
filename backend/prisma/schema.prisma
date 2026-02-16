@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int       @id @default(autoincrement())
+  email           String    @unique
+  password        String
+  role            String    @default("seeker")
+  profile         Profile?  // ← 1:1 relation (optional profile)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Profile {
+  id              Int       @id @default(autoincrement())
+  userId          Int       @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName       String?
+  lastName        String?
+  age             Int?
+  dob             DateTime?
+  maritalStatus   String?   @default("single")
+  phone           String?
+  address         String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  education       Education[]
+  experience      Experience[]
+}
+
+model Education {
+  id          Int       @id @default(autoincrement())
+  profileId   Int
+  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  degree      String
+  college     String
+  year        Int
+  createdAt   DateTime  @default(now())
+}
+
+model Experience {
+  id          Int       @id @default(autoincrement())
+  profileId   Int
+  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  company     String
+  role        String
+  years       Int
+  createdAt   DateTime  @default(now())
+}
