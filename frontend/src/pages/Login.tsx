@@ -51,9 +51,12 @@ export default function Login() {
       }
 
       navigate("/dashboard");
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Invalid email or password");
-    } finally {
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Invalid email or password";
+      setError(message);
+    }
+    finally {
       setLoading(false);
     }
   };

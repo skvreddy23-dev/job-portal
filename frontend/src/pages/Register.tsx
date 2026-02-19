@@ -40,9 +40,12 @@ export default function Register() {
 
       login(token, user);
       navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
-    } finally {
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Registration failed";
+      setError(message);
+    }
+     finally {
       setLoading(false);
     }
   };
