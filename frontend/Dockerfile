@@ -1,7 +1,4 @@
-FROM node:20-alpine
-
-# Install OpenSSL 1.1
-RUN apk add --no-cache openssl1.1-compat
+FROM node:20-bullseye
 
 WORKDIR /app
 
@@ -10,9 +7,8 @@ RUN npm ci
 
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Prisma generate
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
-EXPOSE 5000
-
-CMD ["node", "src/index.js"]
+EXPOSE 5173
+CMD ["npm", "run", "dev"]
