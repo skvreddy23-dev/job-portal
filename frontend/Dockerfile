@@ -1,19 +1,18 @@
-# Step 1 - Build React App
-FROM node:18-alpine AS builder
+FROM node:20-alpine
+
+# Install OpenSSL 1.1
+RUN apk add --no-cache openssl1.1-compat
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
-RUN npm run build
 
-# Step 2 - Serve with Nginx
-FROM nginx:alpine
+# Generate Prisma client
+RUN npx prisma generate
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 5000
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "src/index.js"]
