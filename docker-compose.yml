@@ -9,7 +9,7 @@ services:
       - "5173:80"                     # Vite dev → external 5173
     depends_on:
       - backend
-    restart: unless-stopped
+    restart: always
     environment:
       - VITE_API_URL=http://backend:5000/api
 
@@ -26,7 +26,7 @@ services:
       - ./backend:/app
     depends_on:
       - db
-    restart: unless-stopped
+    restart: always
 
   db:
     image: postgres:16-alpine
